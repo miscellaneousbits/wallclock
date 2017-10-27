@@ -18,9 +18,35 @@ static uint16 lastVbat;
 static uint16 lastMatch;
 static uint16 lastTimeouts = 1000;
 
+static volatile bool bail = false;
+
+static void term(int signum)
+{
+    (void)signum;
+    bail = true;
+}
+
 void *mon_thread(void *param)
 {
-    while (1) {
+    printf(LOG_INFO_STR "Time monitor: started\n");
+    fflush(stdout);
+
+    sigset_t signal_mask;
+    sigemptyset(&signal_mask);
+    sigaddset(&signal_mask, (int)param);
+    int rc = pthread_sigmask(SIG_UNBLOCK, &signal_mask, NULL);
+    if (rc != 0) {
+        fprintf(stderr, LOG_ERR_STR "Error setting signal mask\n");
+        fflush(stderr);
+        return NULL;
+    }
+
+    struct sigaction action;
+    memset(&action, 0, sizeof(struct sigaction));
+    action.sa_handler = term;
+    sigaction((int)param, &action, NULL);
+
+    while (!bail) {
 
         char buffer[17];
 
@@ -75,6 +101,8 @@ void *mon_thread(void *param)
         usleep(1000000 - us);
     }
 
+    printf(LOG_INFO_STR "Time monitor: stopped\n");
+    fflush(stdout);
     pthread_exit(NULL);
 }
 

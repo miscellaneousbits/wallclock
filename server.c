@@ -1,7 +1,7 @@
 #include "main.h"
 #include "src/advertising.h"
 
-static char *name;
+static char *name = "BLE";
 
 const uint16_t UUID_GAP = 		0x1800;
 const uint16_t UUID_GATT =		0x1801;
@@ -159,6 +159,7 @@ static void confirm_write(struct gatt_db_attribute *attr, int err,
         return;
 
     fprintf(stderr, LOG_ERR_STR "%s: Error caching attribute %p - err: %d\n", name, attr, err);
+    fflush(stderr);
     exit(1);
 }
 
@@ -174,6 +175,7 @@ static int populate_gap_service(struct server *server)
     service = gatt_db_add_service(server->db, &uuid, true, 7);
     if (service == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GAP service\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -189,6 +191,7 @@ static int populate_gap_service(struct server *server)
             server);
     if (tmp == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GAP service device name characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -202,6 +205,7 @@ static int populate_gap_service(struct server *server)
                                  NULL, confirm_write,
                                  NULL)) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to write GAP service device name characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
     /*
@@ -215,6 +219,7 @@ static int populate_gap_service(struct server *server)
             NULL, NULL, server);
     if (tmp == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GAP service appearance characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -229,6 +234,7 @@ static int populate_gap_service(struct server *server)
                                  NULL, confirm_write,
                                  NULL)) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to write GAP service appearance characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -243,6 +249,7 @@ static int populate_gap_service(struct server *server)
             NULL, NULL, server);
     if (tmp == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GAP service prefered connection characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -260,6 +267,7 @@ static int populate_gap_service(struct server *server)
                                  NULL, confirm_write,
                                  NULL)) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to write GAP service appearance characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -280,6 +288,7 @@ static int populate_gatt_service(struct server *server)
     service = gatt_db_add_service(server->db, &uuid, true, 4);
     if (service == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GATT service\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -291,6 +300,7 @@ static int populate_gatt_service(struct server *server)
                 NULL, server);
     if (svc_chngd == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GATT service changed characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
     server->gatt_svc_chngd_handle = gatt_db_attribute_get_handle(svc_chngd);
@@ -301,6 +311,7 @@ static int populate_gatt_service(struct server *server)
                                        gatt_svc_chngd_ccc_read_cb,
                                        gatt_svc_chngd_ccc_write_cb, server) == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add GATT service characteristic config descriptor\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -320,6 +331,7 @@ static int populate_i2c_read_service(struct server *server)
     service = gatt_db_add_service(server->db, &uuid, true, 4);
     if (service == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Read service\n", name);
+        fflush(stderr);
         goto fail;
     }
     /* I2c_Read_data Characteristic */
@@ -330,6 +342,7 @@ static int populate_i2c_read_service(struct server *server)
                     NULL, NULL, NULL);
     if (i2c_read_data == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Read service I2C_Read_data characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
     server->i2c_read_data_handle = gatt_db_attribute_get_handle(i2c_read_data);
@@ -340,6 +353,7 @@ static int populate_i2c_read_service(struct server *server)
                                        i2c_read_data_ccc_read_cb,
                                        i2c_read_data_ccc_write_cb, server) == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Read service characteristic config descriptor\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -359,6 +373,7 @@ static int populate_i2c_write_service(struct server *server)
     service = gatt_db_add_service(server->db, &uuid, true, 3);
     if (service == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Write service\n", name);
+        fflush(stderr);
         goto fail;
     }
     /* I2c_Write_data Characteristic */
@@ -369,6 +384,7 @@ static int populate_i2c_write_service(struct server *server)
                      NULL, i2c_write_data_write_cb, server);
     if (i2c_write_data == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Write service I2C_Write_data characteristic\n", name);
+        fflush(stderr);
         goto fail;
     }
     server->i2c_write_data_handle = gatt_db_attribute_get_handle(i2c_write_data);
@@ -383,18 +399,22 @@ static int populate_db(struct server *server)
 {
     if (populate_gap_service(server) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to populate GAP service\n", name);
+        fflush(stderr);
         return -1;
     }
     if (populate_gatt_service(server) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to populate GATT service\n", name);
+        fflush(stderr);
         return -1;
     }
     if (populate_i2c_read_service(server) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to populate I2C_Read service\n", name);
+        fflush(stderr);
         return -1;
     }
     if (populate_i2c_write_service(server) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to populate I2C_Write service\n", name);
+        fflush(stderr);
         return -1;
     }
     return 0;
@@ -407,23 +427,27 @@ static struct server *server_create(int fd, uint16_t mtu)
     server = new0(struct server, 1);
     if (!server) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to allocate memory for server\n", name);
+        fflush(stderr);
         return NULL;
     }
 
     server->att = bt_att_new(fd, false);
     if (!server->att) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to initialze ATT transport layer\n", name);
+        fflush(stderr);
         goto fail;
     }
 
     if (!bt_att_set_close_on_unref(server->att, true)) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to set up ATT transport layer\n", name);
+        fflush(stderr);
         goto fail;
     }
 
     if (!bt_att_register_disconnect(server->att, att_disconnect_cb, NULL,
                                     NULL)) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to set ATT disconnect handler\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -434,12 +458,14 @@ static struct server *server_create(int fd, uint16_t mtu)
     server->db = gatt_db_new();
     if (!server->db) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to create GATT database\n", name);
+        fflush(stderr);
         goto fail;
     }
 
     server->gatt = bt_gatt_server_new(server->db, server->att, mtu);
     if (!server->gatt) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to create GATT server\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -471,6 +497,7 @@ static int l2cap_le_att_listen_and_accept(void)
     sk = socket(PF_BLUETOOTH, SOCK_SEQPACKET, BTPROTO_L2CAP);
     if (sk < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to create L2CAP socket\n", name);
+        fflush(stderr);
         return -1;
     }
 
@@ -484,6 +511,7 @@ static int l2cap_le_att_listen_and_accept(void)
 
     if (bind(sk, (struct sockaddr *) &srcaddr, sizeof(srcaddr)) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to bind L2CAP socket\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -493,11 +521,13 @@ static int l2cap_le_att_listen_and_accept(void)
     btsec.level = BT_SECURITY_LOW;
     if (setsockopt(sk, SOL_BLUETOOTH, BT_SECURITY, &btsec, sizeof(btsec)) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to set L2CAP security level\n", name);
+        fflush(stderr);
         goto fail;
     }
 
     if (listen(sk, 0) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Listening on socket failed\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -510,11 +540,11 @@ static int l2cap_le_att_listen_and_accept(void)
     int rc = select(sk + 1, &readset, NULL, NULL, &timeout);
     if (rc < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Select failed\n", name);
+        fflush(stderr);
         goto fail;
     }
     if (rc == 0) {
-        printf(LOG_WARNING_STR "%s: Select timedout\n", name);
-        goto fail;
+        goto fail; // timeout
     }
 
     if (FD_ISSET(sk, &readset)) {
@@ -523,6 +553,7 @@ static int l2cap_le_att_listen_and_accept(void)
         nsk = accept(sk, (struct sockaddr *) &addr, &optlen);
         if (nsk < 0) {
             fprintf(stderr, LOG_ERR_STR "%s: Accept failed\n", name);
+            fflush(stderr);
             goto fail;
         }
     }
@@ -539,6 +570,7 @@ static int gatt_service(int fd)
     if (!server) {
         close(fd);
         fprintf(stderr, LOG_ERR_STR "%s: Failed to create server\n", name);
+        fflush(stderr);
         return EXIT_FAILURE;
     }
 
@@ -556,6 +588,7 @@ static int restart_advert(void)
     int dd = hci_open_dev(dev_id);
     if (dd < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Device open failed\n", name);
+        fflush(stderr);
         exit(EXIT_FAILURE);
     }
 
@@ -566,6 +599,7 @@ static int restart_advert(void)
     hci_filter_all_events(&flt);
     if (setsockopt(dd, SOL_HCI, HCI_FILTER, &flt, sizeof(flt)) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: HCI filter setup failed\n", name);
+        fflush(stderr);
         goto fail;
     }
 
@@ -584,21 +618,25 @@ static int restart_advert(void)
 
     if (hci_send_cmd(dd, 8, 8, sizeof(cmd1), cmd1) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Send failed, %s\n", name, strerror(errno));
+        fflush(stderr);
         goto fail;
     }
     unsigned char buf[HCI_MAX_EVENT_SIZE];
     int len = read(dd, buf, sizeof(buf));
     if (len < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Read failed, %s\n", name, strerror(errno));
+        fflush(stderr);
         goto fail;
     }
     if (hci_send_cmd(dd, 8, 9, sizeof(cmd2), cmd2) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Send failed, %s\n", name, strerror(errno));
+        fflush(stderr);
         goto fail;
     }
     len = read(dd, buf, sizeof(buf));
     if (len < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Read failed, %s\n", name, strerror(errno));
+        fflush(stderr);
         goto fail;
     }
 
@@ -622,6 +660,7 @@ static int restart_advert(void)
 
     if (hci_send_req(dd, &rq, 500) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to set advertising parameters, %s\n", name, strerror(errno));
+        fflush(stderr);
         goto fail;
     }
     le_set_advertise_enable_cp advertise_cp;
@@ -643,22 +682,52 @@ fail:
     return rc;
 }
 
+static volatile bool bail = false;
+static int dd;
+static int fd;
+
+static void term(int signum)
+{
+    (void)signum;
+    bail = true;
+    close(fd);
+    hci_close_dev(dd);
+}
+
 void *server_thread(void *ptr)
 {
     printf(LOG_INFO_STR "BLE server: started\n");
+    fflush(stdout);
 
-    for (;;) {
-        if (restart_advert() < 0)
+    sigset_t signal_mask;
+    sigemptyset(&signal_mask);
+    sigaddset(&signal_mask, (int)ptr);
+    int rc = pthread_sigmask(SIG_UNBLOCK, &signal_mask, NULL);
+    if (rc != 0) {
+        fprintf(stderr, LOG_ERR_STR "Error setting signal mask\n");
+        fflush(stderr);
+        return NULL;
+    }
+
+    struct sigaction action;
+    memset(&action, 0, sizeof(struct sigaction));
+    action.sa_handler = term;
+    sigaction((int)ptr, &action, NULL);
+
+    while (!bail) {
+        if (restart_advert() < 0) {
             fprintf(stderr, LOG_ERR_STR "%s: Failed to restart advertising\n", name);
-        else {
+            fflush(stderr);
+        } else {
             int dev_id = hci_get_route(NULL);
-            int dd = hci_open_dev(dev_id);
+            dd = hci_open_dev(dev_id);
             if (dd < 0) {
                 fprintf(stderr, LOG_ERR_STR "%s: Device open failed\n", name);
+                fflush(stderr);
                 exit(EXIT_FAILURE);
             }
 
-            int fd = l2cap_le_att_listen_and_accept();
+            fd = l2cap_le_att_listen_and_accept();
             if (fd >= 0) {
                 gatt_service(fd);
                 close(fd);
@@ -666,5 +735,8 @@ void *server_thread(void *ptr)
             hci_close_dev(dd);
         }
     }
+    printf(LOG_INFO_STR "BLE server: stopped\n");
+    fflush(stdout);
+    return NULL;
 }
 

@@ -34,6 +34,7 @@ int get_clock_face_time(char *ts, uint64_t *t)
     if (s > 59)
         return -1;
     printf(LOG_INFO_STR "Starting clock at %02u:%02u:%02u\n", h, m, s);
+    fflush(stdout);
     time_t currtime;
     struct tm timeinfoLocal;
 
@@ -45,8 +46,6 @@ int get_clock_face_time(char *ts, uint64_t *t)
     *t = ((uint64_t)mktime(&timeinfoLocal) << 8u) + (timeinfoLocal.tm_gmtoff << 8);;
     return 0;
 }
-
-extern char ba[];
 
 void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
 {
@@ -68,10 +67,12 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
             user_data.len = sizeof(msg_u64_t);
             i2c_read_data_cb(&user_data);
             printf(LOG_INFO_STR "Face time set %016llx\n", gFaceTime);
+            fflush(stdout);
             lastActivity = time(NULL);
             break;
         }
         fprintf(stderr, LOG_ERR_STR "Face time requested, but not set by cmd line\n");
+        fflush(stderr);
         exit(EXIT_FAILURE);
         break;
 
@@ -103,19 +104,20 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         if (b < 0.0)
             b = 0.0;
         printf(LOG_INFO_STR
-               "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u,%s\n",
+               "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n",
                gPollInterval,
                (uint32_t)(gLastPollTime - lastActivity),
                gTimeouts,
                gPollCount,
                gDelta / 256.0,
                (gVbat * 0.0011) + 0.0013,
-               gMatch,
-               ba
+               gMatch
               );
+        fflush(stdout);
         lastActivity = gLastPollTime;
         if (gFaceTime) {
             printf(LOG_INFO_STR "Face time set acknowledged\n");
+            fflush(stdout);
             gFaceTime = 0;
         }
         break;

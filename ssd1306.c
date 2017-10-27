@@ -50,7 +50,7 @@ void Oled_end(void)
 
 // the memory buffer for the LCD
 
-static uint8 buffer[(SSD1306_LCDHEIGHT *SSD1306_LCDWIDTH) / 8];
+static uint8 buffer[(SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH) / 8];
 
 #define ssd1306_swap(a, b) { short t = a; a = b; b = t; }
 

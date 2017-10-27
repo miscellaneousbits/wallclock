@@ -1,5 +1,7 @@
 CC=gcc
 
+INSTALLDIR=/usr/local/lib
+
 INCLUDES= \
 	-I/usr/include/dbus-1.0 \
 	-I/usr/lib/arm-linux-gnueabihf/dbus-1.0/include \
@@ -59,8 +61,7 @@ clean:
 	@rm -rf $(OBJECTS) $(DEPS) *.map $(TARGET)
 
 install: $(TARGET)
-	sudo cp powernet421.mib /var/lib/mibs/ietf
-	sudo cp $(TARGET) /usr/libexec/bluetooth
+	sudo cp $(TARGET) $(INSTALLDIR)
 
 style:
 	@astyle $(STYLEFLAGS) $(wildcard *.c) $(wildcard *.h)

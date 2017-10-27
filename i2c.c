@@ -70,7 +70,7 @@ void i2c_write(int addr, void *buf, int nbytes)
 #if ENABLE_I2C
     i2c_slave_address(addr);
 #if DEBUG
-   printf(LOG_INFO_STR "write =");
+    printf(LOG_INFO_STR "write =");
     int i;
     for (i = 0; i < nbytes; i++)
         printf(stderr, LOG_INFO_STR  " %02x", ((char *)buf)[i]);
