@@ -1,12 +1,13 @@
 CC=gcc
 
 INSTALLDIR=/usr/local/lib
+BLUEZDIR=../bluez-5.50
 
 INCLUDES= \
 	-I/usr/include/dbus-1.0 \
 	-I/usr/lib/arm-linux-gnueabihf/dbus-1.0/include \
 	-I/usr/include/glib-2.0 \
-	-I../bluez
+	-I$(BLUEZDIR)
 
 LIBS=-lm -lbluetooth -lsystemd -lpthread
 
@@ -29,7 +30,7 @@ SOURCES= \
 	gatt-server.c \
 	uuid.c \
 
-VPATH=.:../bluez/src/shared:../bluez/src:../bluez/lib
+VPATH=.:$(BLUEZDIR)/src/shared:$(BLUEZDIR)/src:$(BLUEZDIR)/lib
 
 OBJECTS=$(SOURCES:.c=.o)
 TARGET=wallclock
