@@ -10,11 +10,11 @@ INCLUDES= \
 
 LIBS=-lm -lbluetooth -lsystemd -lpthread
 
-COPTFLAG=-O3 -lfto
+COPTFLAG=-O3 -flto
 #COPTFLAG=-g
 
 CFLAGS=$(COPTFLAG) -Wall -ffunction-sections -fdata-sections $(INCLUDES)
-LDFLAGS=-Wl,--gc-sections,-Map=$(TARGET).map $(LIBS)
+LDFLAGS=$(COPTFLAG) -Wl,--gc-sections,-Map=$(TARGET).map
 
 SOURCES= \
 	$(wildcard *.c) \
@@ -35,6 +35,7 @@ OBJECTS=$(SOURCES:.c=.o)
 TARGET=wallclock
 DEPS=$(OBJECTS:.o=.d)
 ECHO=@
+#ECHO=
 
 STYLEFLAGS = \
 	--style=linux --indent=spaces=4 --indent-labels \
@@ -45,15 +46,15 @@ STYLEFLAGS = \
 
 .PHONY: clean install all style
 
-all: $(TARGET) makefile
+all: $(TARGET) Makefile
 
 -include $(DEPS)
 
-$(TARGET): $(OBJECTS) makefile
+$(TARGET): $(OBJECTS) Makefile
 	@echo "CCLD $(OBJECTS)"
-	$(ECHO)$(CC) $(LDFLAGS) -o $(TARGET) $(OBJECTS)
+	$(ECHO)$(CC) $(LDFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 
-%.o: %.c makefile
+%.o: %.c Makefile
 	@echo "CC $<"
 	$(ECHO)$(CC) $(CFLAGS) -MMD -c $< -o $@
 

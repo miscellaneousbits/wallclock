@@ -87,7 +87,7 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         break;
 
     case CLK_ACCEPT_STATUS:
-        gPollInterval = 1 << (m.sts.interval + 5);
+        gPollInterval = 1 << m.sts.interval;
         gDelta = m.sts.offset;
         gVbat = m.sts.battery;
         gMatch = m.sts.match;
