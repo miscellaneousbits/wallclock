@@ -11,7 +11,7 @@ INCLUDES= \
 
 LIBS=-lm -lbluetooth -lsystemd -lpthread
 
-COPTFLAG=-O3 -flto
+COPTFLAG=-O3
 #COPTFLAG=-g
 
 CFLAGS=$(COPTFLAG) -Wall -ffunction-sections -fdata-sections $(INCLUDES)

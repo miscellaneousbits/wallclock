@@ -110,7 +110,7 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
                gTimeouts,
                gPollCount,
                gDelta / 256.0,
-               (gVbat * 0.0011) + 0.0013,
+               gVbat * 0.001,
                gMatch
               );
         fflush(stdout);
