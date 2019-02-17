@@ -99,10 +99,6 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         user_data.buffer = &m;
         user_data.len = sizeof(msg_u8_t);
         i2c_read_data_cb(&user_data);
-        float b = (gVbat * 0.0011) +  0.004;
-        b = (b - 3.3) / (4.5 - 3.3);
-        if (b < 0.0)
-            b = 0.0;
         printf(LOG_INFO_STR
                "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n",
                gPollInterval,

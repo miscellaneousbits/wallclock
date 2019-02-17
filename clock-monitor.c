@@ -76,7 +76,7 @@ void *mon_thread(void *param)
             gfx_setCursor(0, 32);
             gfx_writeStr("        ");
             gfx_setCursor(0, 32);
-            snprintf(buffer, sizeof(buffer), "V %0.2f", gVbat * 0.0011 + 0.0013);
+            snprintf(buffer, sizeof(buffer), "V %0.2f", gVbat * 0.001);
             gfx_writeStr(buffer);
             lastVbat = gVbat;
             ssd1306_displayLine(4);
