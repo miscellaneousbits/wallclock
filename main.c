@@ -35,15 +35,6 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    i2c_init();
-    ssd1306_checkOled();
-
-    if (pthread_create(&mon_thread_handle, NULL, mon_thread, (void *)SIGUSR1)) {
-        fprintf(stderr, LOG_ERR_STR "Error creating BLE server thread\n");
-        fflush(stderr);
-        return EXIT_FAILURE;
-    }
-
     if (pthread_create(&server_thread_handle, NULL, server_thread, (void *)SIGUSR2)) {
         fprintf(stderr, LOG_ERR_STR "Error creating BLE server thread\n");
         fflush(stderr);
@@ -64,12 +55,6 @@ int main(int argc, char *argv[])
     sigaction(SIGINT, &action, NULL);
 
     sd_notify(0, "READY=1");
-
-    if (pthread_join(mon_thread_handle, NULL)) {
-        fprintf(stderr, LOG_ERR_STR "Error joining monitor thread\n");
-        fflush(stderr);
-        return EXIT_FAILURE;
-    }
 
     if (pthread_join(server_thread_handle, NULL)) {
         fprintf(stderr, LOG_ERR_STR "Error joining monitor thread\n");

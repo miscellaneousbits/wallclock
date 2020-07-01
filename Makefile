@@ -1,6 +1,6 @@
 CC=gcc
 
-INSTALLDIR=/usr/local/lib
+INSTALLDIR=/usr/local/bin
 BLUEZDIR=../bluez-5.50
 
 INCLUDES= \

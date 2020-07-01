@@ -67,12 +67,8 @@ typedef struct {
 } user_data_t;
 
 #include "common-types.h"
-#include "i2c.h"
-#include "ssd1306.h"
-#include "gfx.h"
 #include "clock-messages.h"
 #include "clock-commands.h"
-#include "clock-monitor.h"
 #include "server.h"
 
 #endif

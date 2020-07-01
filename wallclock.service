@@ -1,0 +1,12 @@
+[Unit]
+Description=Wallclock time Service
+After=multi-user.target
+
+
+[Service]
+ExecStart=/usr/local/bin/wallclock
+Type=notify
+SyslogIdentifier=wallclock
+
+[Install]
+WantedBy=multi-user.target
