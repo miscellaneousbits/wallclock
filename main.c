@@ -1,5 +1,7 @@
 #include "main.h"
 
+#include <bcm2835.h>
+
 static pthread_t mon_thread_handle;
 static pthread_t server_thread_handle;
 
@@ -28,6 +30,8 @@ int main(int argc, char *argv[])
     sigaddset(&signal_mask, SIGTERM);
     sigaddset(&signal_mask, SIGUSR1);
     sigaddset(&signal_mask, SIGUSR2);
+
+    led_init();
     int rc = pthread_sigmask(SIG_BLOCK, &signal_mask, NULL);
     if (rc != 0) {
         fprintf(stderr, LOG_ERR_STR "Error setting signal mask\n");
@@ -62,6 +66,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    led_close();
     printf(LOG_INFO_STR "Stopped\n");
     fflush(stdout);
 

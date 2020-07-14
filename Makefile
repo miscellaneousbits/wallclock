@@ -9,7 +9,7 @@ INCLUDES= \
 	-I/usr/include/glib-2.0 \
 	-I$(BLUEZDIR)
 
-LIBS=-lm -lbluetooth -lsystemd -lpthread
+LIBS=-lm -lbluetooth -lsystemd -lpthread -lbcm2835
 
 COPTFLAG=-O3
 #COPTFLAG=-g

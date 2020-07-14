@@ -43,6 +43,8 @@
 #include "src/shared/gatt-db.h"
 #include "src/shared/gatt-server.h"
 
+#include "led.h"
+
 struct server {
     int fd;
     struct bt_att *att;

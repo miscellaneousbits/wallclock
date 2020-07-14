@@ -99,17 +99,25 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         user_data.buffer = &m;
         user_data.len = sizeof(msg_u8_t);
         i2c_read_data_cb(&user_data);
+	float delta = gDelta / 256.0;
         printf(LOG_INFO_STR
                "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n",
                gPollInterval,
                (uint32_t)(gLastPollTime - lastActivity),
                gTimeouts,
                gPollCount,
-               gDelta / 256.0,
+               delta,
                gVbat * 0.001,
                gMatch
               );
         fflush(stdout);
+	delta = abs(delta);
+        if (delta > 60)
+            led_red();
+        else if (delta < 1.0/60.0)
+            led_green();
+        else
+            led_blue();
         lastActivity = gLastPollTime;
         if (gFaceTime) {
             printf(LOG_INFO_STR "Face time set acknowledged\n");
