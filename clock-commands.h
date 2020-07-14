@@ -1,5 +1,7 @@
 #pragma once
 
+#include "main.h"
+
 void clock_command(struct server *server, const uint8_t *cmd, uint8_t len);
 uint64_t getime(void);
 int get_clock_face_time(char *ts, uint64_t *t);

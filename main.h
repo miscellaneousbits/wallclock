@@ -8,9 +8,6 @@
 #define MINS2SECS(_m_) ((_m_) * 60u)
 #define HRS2SECS(_h_) MINS2SECS((_h_) * 60u)
 
-#define NUM_POTS 3
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -22,6 +19,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <errno.h>
+#include <stdint.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <bluetooth/bluetooth.h>
@@ -68,10 +66,9 @@ typedef struct {
     uint32_t len;
 } user_data_t;
 
-#include "common-types.h"
+#include "server.h"
 #include "clock-messages.h"
 #include "clock-commands.h"
-#include "server.h"
 
 #endif
 
