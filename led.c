@@ -39,24 +39,19 @@ void led_blink(int on)
     bcm2835_pwm_set_data(PWM_CHAN, on ? 2048 : 8191);
 }
 
-void led_red(void)
+void led_red(int on)
 {
-    bcm2835_gpio_write(GREEN_LED, HIGH);
-    bcm2835_gpio_write(BLUE_LED, HIGH);
-    bcm2835_gpio_write(RED_LED, LOW);
+    bcm2835_gpio_write(RED_LED, on ? LOW : HIGH);
 }
 
-void led_green(void)
+void led_green(int on)
 {
-    bcm2835_gpio_write(RED_LED, HIGH);
-    bcm2835_gpio_write(BLUE_LED, HIGH);
-    bcm2835_gpio_write(GREEN_LED, LOW);
+    bcm2835_gpio_write(GREEN_LED, on ? LOW : HIGH);
 }
 
-void led_blue(void)
+void led_blue(int on)
 {
-    bcm2835_gpio_write(RED_LED, HIGH);
-    bcm2835_gpio_write(GREEN_LED, HIGH);
-    bcm2835_gpio_write(BLUE_LED, LOW);
+    bcm2835_gpio_write(BLUE_LED, on ? LOW : HIGH);
 }
+
 

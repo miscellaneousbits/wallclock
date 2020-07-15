@@ -112,12 +112,25 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
               );
         fflush(stdout);
 	delta = abs(delta);
+	led_blink(0);
         if (delta > 60)
-            led_red();
+	{
+            led_red(1);
+            led_green(0);
+            led_blue(0);
+	}
         else if (delta <= 0.02)
-            led_green();
+	{
+            led_red(1);
+            led_green(0);
+            led_blue(1);
+	}
         else
-            led_blue();
+	{
+            led_red(0);
+            led_green(1);
+            led_blue(0);
+	}
         lastActivity = gLastPollTime;
         if (gFaceTime) {
             printf(LOG_INFO_STR "Face time set acknowledged\n");

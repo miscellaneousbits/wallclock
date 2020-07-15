@@ -691,8 +691,6 @@ static void term(int signum)
 {
     (void)signum;
     bail = true;
-    close(fd);
-    hci_close_dev(dd);
 }
 
 void *server_thread(void *ptr)
@@ -736,6 +734,8 @@ void *server_thread(void *ptr)
             hci_close_dev(dd);
         }
     }
+    close(fd);
+    hci_close_dev(dd);
     printf(LOG_INFO_STR "BLE server: stopped\n");
     fflush(stdout);
     return NULL;

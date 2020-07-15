@@ -2,13 +2,11 @@
 
 #include <bcm2835.h>
 
-static pthread_t mon_thread_handle;
 static pthread_t server_thread_handle;
 
 static void term(int signum)
 {
     (void)signum;
-    pthread_kill(mon_thread_handle, SIGUSR1);
     pthread_kill(server_thread_handle, SIGUSR2);
 }
 

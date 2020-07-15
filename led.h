@@ -9,11 +9,11 @@ int led_init(void);
 
 void led_close(void);
 
-void led_red(void);
+void led_red(int on);
 
-void led_green(void);
+void led_green(int on);
 
-void led_blue(void);
+void led_blue(int on);
 
 void led_blink(int on);
 
