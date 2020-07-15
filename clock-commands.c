@@ -47,6 +47,13 @@ int get_clock_face_time(char *ts, uint64_t *t)
     return 0;
 }
 
+static void leds(int r, int g, int b)
+{
+    led_red(r);
+    led_green(g);
+    led_blue(b);
+}
+
 void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
 {
     msg_t m;
@@ -99,7 +106,7 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         user_data.buffer = &m;
         user_data.len = sizeof(msg_u8_t);
         i2c_read_data_cb(&user_data);
-	float delta = gDelta / 256.0;
+        float delta = gDelta / 256.0;
         printf(LOG_INFO_STR
                "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n",
                gPollInterval,
@@ -111,26 +118,14 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
                gMatch
               );
         fflush(stdout);
-	delta = abs(delta);
-	led_blink(0);
+        delta = abs(delta);
+        led_blink(0);
         if (delta > 60)
-	{
-            led_red(1);
-            led_green(0);
-            led_blue(0);
-	}
+            leds(1, 0, 0);
         else if (delta <= 0.02)
-	{
-            led_red(1);
-            led_green(0);
-            led_blue(1);
-	}
+            leds(0, 1, 0);
         else
-	{
-            led_red(0);
-            led_green(1);
-            led_blue(0);
-	}
+            leds(1, 0, 1);
         lastActivity = gLastPollTime;
         if (gFaceTime) {
             printf(LOG_INFO_STR "Face time set acknowledged\n");
