@@ -1,23 +1,19 @@
 CC=gcc
 
-INSTALLDIR=/usr/local/bin
-BLUEZDIR=../bluez-5.50
+INSTALLDIR = /usr/local/bin
+BLUEZDIR = ../bluez-5.50
 
-INCLUDES= \
-	-I/usr/include/dbus-1.0 \
-	-I/usr/lib/arm-linux-gnueabihf/dbus-1.0/include \
-	-I/usr/include/glib-2.0 \
-	-I$(BLUEZDIR)
+INCLUDES = -I$(BLUEZDIR)
 
-LIBS=-lm -lbluetooth -lsystemd -lpthread -lbcm2835
+LIBS = -lm -lbluetooth -lsystemd -lpthread -lbcm2835
 
-COPTFLAG=-O3
-#COPTFLAG=-g
+COPTFLAG = -O3
+#COPTFLAG = -g
 
-CFLAGS=$(COPTFLAG) -Wall -ffunction-sections -fdata-sections $(INCLUDES)
-LDFLAGS=$(COPTFLAG) -Wl,--gc-sections,-Map=$(TARGET).map
+CFLAGS = $(COPTFLAG) -Wall -flto -ffunction-sections -fdata-sections $(INCLUDES)
+LDFLAGS = $(COPTFLAG) -flto -Wl,--gc-sections,-Map=$(TARGET).map
 
-SOURCES= \
+SOURCES = \
 	$(wildcard *.c) \
 	gatt-db.c \
 	queue.c \
@@ -28,24 +24,17 @@ SOURCES= \
 	att.c \
 	crypto.c \
 	gatt-server.c \
-	uuid.c \
+	uuid.c
 
-VPATH=.:$(BLUEZDIR)/src/shared:$(BLUEZDIR)/src:$(BLUEZDIR)/lib
+VPATH = .:$(BLUEZDIR)/src/shared:$(BLUEZDIR)/src:$(BLUEZDIR)/lib
 
-OBJECTS=$(SOURCES:.c=.o)
-TARGET=wallclock
-DEPS=$(OBJECTS:.o=.d)
-ECHO=@
-#ECHO=
+OBJECTS = $(SOURCES:.c=.o)
+TARGET = wallclock
+DEPS = $(OBJECTS:.o=.d)
+ECHO = @
+#ECHO =
 
-STYLEFLAGS = \
-	--style=linux --indent=spaces=4 --indent-labels \
-	--pad-oper --pad-header --unpad-paren --align-pointer=name \
-	--align-reference=name --remove-brackets \
-	--remove-comment-prefix --max-code-length=120 \
-	--suffix=none --lineend=linux
-
-.PHONY: clean install all style
+.PHONY: clean install all
 
 all: $(TARGET) Makefile
 
@@ -64,7 +53,3 @@ clean:
 
 install: $(TARGET)
 	sudo cp $(TARGET) $(INSTALLDIR)
-
-style:
-	@astyle $(STYLEFLAGS) $(wildcard *.c) $(wildcard *.h)
-
