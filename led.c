@@ -1,11 +1,11 @@
 
 #include <bcm2835.h>
 
-#define RED_LED    RPI_V2_GPIO_P1_36
-#define GREEN_LED  RPI_V2_GPIO_P1_38
-#define BLUE_LED   RPI_V2_GPIO_P1_40
+#define RED_LED RPI_V2_GPIO_P1_36
+#define GREEN_LED RPI_V2_GPIO_P1_38
+#define BLUE_LED RPI_V2_GPIO_P1_40
 #define COMMON_LED RPI_V2_GPIO_P1_35
-#define PWM_CHAN   1
+#define PWM_CHAN 1
 
 int led_init(void)
 {
@@ -53,5 +53,3 @@ void led_blue(int on)
 {
     bcm2835_gpio_write(BLUE_LED, on ? LOW : HIGH);
 }
-
-

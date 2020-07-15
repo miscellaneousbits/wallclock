@@ -27,7 +27,6 @@
 #include <bluetooth/hci_lib.h>
 #include <bluetooth/l2cap.h>
 #include <systemd/sd-daemon.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 

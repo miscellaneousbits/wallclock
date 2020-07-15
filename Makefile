@@ -10,8 +10,8 @@ LIBS = -lm -lbluetooth -lsystemd -lpthread -lbcm2835
 COPTFLAG = -O3
 #COPTFLAG = -g
 
-CFLAGS = $(COPTFLAG) -Wall -flto -ffunction-sections -fdata-sections $(INCLUDES)
-LDFLAGS = $(COPTFLAG) -flto -Wl,--gc-sections,-Map=$(TARGET).map
+CFLAGS = $(COPTFLAG) -Wall -ffunction-sections -fdata-sections $(INCLUDES)
+LDFLAGS = $(COPTFLAG) -Wl,--gc-sections,-Map=$(TARGET).map
 
 SOURCES = \
 	$(wildcard *.c) \

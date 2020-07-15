@@ -16,12 +16,11 @@ uint64_t get_time(void)
     localtime_r(&tt, &t);
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);
-    return
-        ((uint64_t)ts.tv_sec << 8) + (((uint64_t)ts.tv_nsec << 8) / 1000000000U) +
-        (t.tm_gmtoff << 8);
+    return ((uint64_t)ts.tv_sec << 8) + (((uint64_t)ts.tv_nsec << 8) / 1000000000U) +
+           (t.tm_gmtoff << 8);
 }
 
-int get_clock_face_time(char *ts, uint64_t *t)
+int get_clock_face_time(char* ts, uint64_t* t)
 {
     uint32_t h, m, s;
 
@@ -43,7 +42,8 @@ int get_clock_face_time(char *ts, uint64_t *t)
     timeinfoLocal.tm_hour = h;
     timeinfoLocal.tm_min = m;
     timeinfoLocal.tm_sec = s;
-    *t = ((uint64_t)mktime(&timeinfoLocal) << 8u) + (timeinfoLocal.tm_gmtoff << 8);;
+    *t = ((uint64_t)mktime(&timeinfoLocal) << 8u) + (timeinfoLocal.tm_gmtoff << 8);
+    ;
     return 0;
 }
 
@@ -54,7 +54,7 @@ static void leds(int r, int g, int b)
     led_blue(b);
 }
 
-void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
+void clock_command(struct server* server, const uint8_t* cmd, uint8_t len)
 {
     msg_t m;
     user_data_t user_data;
@@ -63,9 +63,11 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
     if (len > sizeof(msg_t))
         len = sizeof(msg_t);
     memcpy(&m, cmd, len);
-    switch (m.u8.cmd) {
+    switch (m.u8.cmd)
+    {
     case CLK_REQ_FACE_TIME:
-        if (gFaceTime) {
+        if (gFaceTime)
+        {
             m.u64.cmd = SRVR_ACCEPT_FACE_TIME;
             m.u64.data = gFaceTime;
             user_data.server = server;
@@ -105,16 +107,9 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         user_data.len = sizeof(msg_u8_t);
         clock_read_data_cb(&user_data);
         float delta = gDelta / 256.0;
-        printf(LOG_INFO_STR
-               "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n",
-               gPollInterval,
-               (uint32_t)(gLastPollTime - lastActivity),
-               gTimeouts,
-               gPollCount,
-               delta,
-               gVbat * 0.001,
-               gMatch
-              );
+        printf(LOG_INFO_STR "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n", gPollInterval,
+            (uint32_t)(gLastPollTime - lastActivity), gTimeouts, gPollCount, delta, gVbat * 0.001,
+            gMatch);
         fflush(stdout);
         delta = abs(delta);
         led_blink(0);
@@ -125,7 +120,8 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         else
             leds(1, 0, 1);
         lastActivity = gLastPollTime;
-        if (gFaceTime) {
+        if (gFaceTime)
+        {
             printf(LOG_INFO_STR "Face time set acknowledged\n");
             fflush(stdout);
             gFaceTime = 0;

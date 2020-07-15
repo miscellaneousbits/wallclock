@@ -10,12 +10,14 @@ static void term(int signum)
     pthread_kill(server_thread_handle, SIGUSR2);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     printf(LOG_INFO_STR "Starting\n");
     fflush(stdout);
-    if ((argc >= 3) && (strcmp(argv[1], "-s") == 0)) {
-        if (get_clock_face_time(argv[2], &gFaceTime) < 0) {
+    if ((argc >= 3) && (strcmp(argv[1], "-s") == 0))
+    {
+        if (get_clock_face_time(argv[2], &gFaceTime) < 0)
+        {
             fprintf(stderr, "Bad face time format\n");
             fflush(stderr);
             exit(EXIT_FAILURE);
@@ -31,20 +33,23 @@ int main(int argc, char *argv[])
 
     led_init();
     int rc = pthread_sigmask(SIG_BLOCK, &signal_mask, NULL);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         fprintf(stderr, LOG_ERR_STR "Error setting signal mask\n");
         fflush(stderr);
         return EXIT_FAILURE;
     }
 
-    if (pthread_create(&server_thread_handle, NULL, server_thread, (void *)SIGUSR2)) {
+    if (pthread_create(&server_thread_handle, NULL, server_thread, (void*)SIGUSR2))
+    {
         fprintf(stderr, LOG_ERR_STR "Error creating BLE server thread\n");
         fflush(stderr);
         return EXIT_FAILURE;
     }
 
     rc = pthread_sigmask(SIG_UNBLOCK, &signal_mask, NULL);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         fprintf(stderr, LOG_ERR_STR "Error setting signal mask\n");
         fflush(stderr);
         return EXIT_FAILURE;
@@ -58,7 +63,8 @@ int main(int argc, char *argv[])
 
     sd_notify(0, "READY=1");
 
-    if (pthread_join(server_thread_handle, NULL)) {
+    if (pthread_join(server_thread_handle, NULL))
+    {
         fprintf(stderr, LOG_ERR_STR "Error joining monitor thread\n");
         fflush(stderr);
         return EXIT_FAILURE;
