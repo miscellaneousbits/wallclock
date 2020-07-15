@@ -1,7 +1,7 @@
 CC=gcc
 
 INSTALLDIR = /usr/local/bin
-BLUEZDIR = ../bluez-5.50
+BLUEZDIR = bluez-5.50
 
 INCLUDES = -I$(BLUEZDIR)
 
@@ -15,15 +15,7 @@ LDFLAGS = $(COPTFLAG) -Wl,--gc-sections,-Map=$(TARGET).map
 
 SOURCES = \
 	$(wildcard *.c) \
-	gatt-db.c \
-	queue.c \
-	util.c \
-	mainloop.c \
-	timeout-mainloop.c \
-	io-mainloop.c \
-	att.c \
-	crypto.c \
-	gatt-server.c \
+	$(wildcard $(BLUEZDIR)/src/shared/*.c) \
 	uuid.c
 
 VPATH = .:$(BLUEZDIR)/src/shared:$(BLUEZDIR)/src:$(BLUEZDIR)/lib
@@ -45,7 +37,7 @@ $(TARGET): $(OBJECTS) Makefile
 	$(ECHO)$(CC) $(LDFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
 
 %.o: %.c Makefile
-	@echo "CC $<"
+	@echo "CC   $<"
 	$(ECHO)$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 clean:
