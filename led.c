@@ -41,16 +41,16 @@ void led_blink(int on)
 
 void led_red(void)
 {
-    bcm2835_gpio_write(RED_LED, LOW);
     bcm2835_gpio_write(GREEN_LED, HIGH);
     bcm2835_gpio_write(BLUE_LED, HIGH);
+    bcm2835_gpio_write(RED_LED, LOW);
 }
 
 void led_green(void)
 {
     bcm2835_gpio_write(RED_LED, HIGH);
-    bcm2835_gpio_write(GREEN_LED, LOW);
     bcm2835_gpio_write(BLUE_LED, HIGH);
+    bcm2835_gpio_write(GREEN_LED, LOW);
 }
 
 void led_blue(void)
