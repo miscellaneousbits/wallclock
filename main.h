@@ -67,8 +67,8 @@ typedef struct {
 } user_data_t;
 
 #include "server.h"
-#include "clock-messages.h"
-#include "clock-commands.h"
+#include "messages.h"
+#include "commands.h"
 
 #endif
 
