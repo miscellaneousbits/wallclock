@@ -68,11 +68,10 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         if (gFaceTime) {
             m.u64.cmd = SRVR_ACCEPT_FACE_TIME;
             m.u64.data = gFaceTime;
-            //i2c_write(BLE_I2C_SLAVE_ADDRESS, &m, sizeof(msg_u64_t));
             user_data.server = server;
             user_data.buffer = &m;
             user_data.len = sizeof(msg_u64_t);
-            i2c_read_data_cb(&user_data);
+            clock_read_data_cb(&user_data);
             printf(LOG_INFO_STR "Face time set %016llx\n", gFaceTime);
             fflush(stdout);
             lastActivity = time(NULL);
@@ -86,11 +85,10 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
     case CLK_REQ_TIME:
         m.u64.cmd = SRVR_ACCEPT_TIME;
         m.u64.data = get_time();
-        //i2c_write(BLE_I2C_SLAVE_ADDRESS, &m, sizeof(msg_u64_t));
         user_data.server = server;
         user_data.buffer = &m;
         user_data.len = sizeof(msg_u64_t);
-        i2c_read_data_cb(&user_data);
+        clock_read_data_cb(&user_data);
         break;
 
     case CLK_ACCEPT_STATUS:
@@ -105,7 +103,7 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
         user_data.server = server;
         user_data.buffer = &m;
         user_data.len = sizeof(msg_u8_t);
-        i2c_read_data_cb(&user_data);
+        clock_read_data_cb(&user_data);
         float delta = gDelta / 256.0;
         printf(LOG_INFO_STR
                "CI=%u,SI=%u,TO=%u,PC=%u,D=%0.2f,V=%0.2f,M=%u\n",

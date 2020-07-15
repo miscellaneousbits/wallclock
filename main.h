@@ -55,9 +55,9 @@ struct server {
     uint16_t gatt_svc_chngd_handle;
     bool svc_chngd_enabled;
 
-    uint16_t i2c_read_data_handle;
-    uint16_t i2c_write_data_handle;
-    uint8_t i2c_read_data_notify;
+    uint16_t clock_read_data_handle;
+    uint16_t clock_write_data_handle;
+    uint8_t clock_read_data_notify;
 };
 
 typedef struct {

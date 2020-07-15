@@ -72,33 +72,33 @@ done:
     gatt_db_attribute_write_result(attrib, id, ecode);
 }
 
-static void i2c_read_data_ccc_read_cb(struct gatt_db_attribute *attrib,
-                                      uint32_t id, uint16_t offset,
-                                      uint8_t opcode, struct bt_att *att,
-                                      void *user_data)
+static void clock_read_data_ccc_read_cb(struct gatt_db_attribute *attrib,
+                                        uint32_t id, uint16_t offset,
+                                        uint8_t opcode, struct bt_att *att,
+                                        void *user_data)
 {
     struct server *server = user_data;
     uint8_t value[2];
 
-    value[0] = server->i2c_read_data_notify ? 0x01 : 0x00;
+    value[0] = server->clock_read_data_notify ? 0x01 : 0x00;
     value[1] = 0x00;
 
     gatt_db_attribute_read_result(attrib, id, 0, value, 2);
 }
 
-bool i2c_read_data_cb(void *user_data)
+bool clock_read_data_cb(void *user_data)
 {
     user_data_t *u_data = (user_data_t *)user_data;
     struct server *server = u_data->server;
 
     bt_gatt_server_send_notification(server->gatt,
-                                     server->i2c_read_data_handle,
+                                     server->clock_read_data_handle,
                                      u_data->buffer, u_data->len);
 
     return true;
 }
 
-static void i2c_read_data_ccc_write_cb(struct gatt_db_attribute *attrib,
+static void clock_read_data_ccc_write_cb(struct gatt_db_attribute *attrib,
                                        uint32_t id, uint16_t offset,
                                        const uint8_t *value, size_t len,
                                        uint8_t opcode, struct bt_att *att,
@@ -118,9 +118,9 @@ static void i2c_read_data_ccc_write_cb(struct gatt_db_attribute *attrib,
     }
 
     if (value[0] == 0x00)
-        server->i2c_read_data_notify = false;
+        server->clock_read_data_notify = false;
     else if (value[0] == 0x01)
-        server->i2c_read_data_notify = true;
+        server->clock_read_data_notify = true;
     else
         ecode = 0x80;
 
@@ -128,7 +128,7 @@ done:
     gatt_db_attribute_write_result(attrib, id, ecode);
 }
 
-static void i2c_write_data_write_cb(struct gatt_db_attribute *attrib,
+static void clock_write_data_write_cb(struct gatt_db_attribute *attrib,
                                     uint32_t id, uint16_t offset,
                                     const uint8_t *value, size_t len,
                                     uint8_t opcode, struct bt_att *att,
@@ -322,10 +322,10 @@ fail:
     return -1;
 }
 
-static int populate_i2c_read_service(struct server *server)
+static int populate_clock_read_service(struct server *server)
 {
     bt_uuid_t uuid;
-    struct gatt_db_attribute *service, *i2c_read_data;
+    struct gatt_db_attribute *service, *clock_read_data;
 
     /* Add I2C_Read Service */
     bt_string_to_uuid(&uuid, UUID_I2C_READ);
@@ -337,22 +337,22 @@ static int populate_i2c_read_service(struct server *server)
     }
     /* I2c_Read_data Characteristic */
     bt_string_to_uuid(&uuid, UUID_I2C_READ_DATA);
-    i2c_read_data = gatt_db_service_add_characteristic(service, &uuid,
+    clock_read_data = gatt_db_service_add_characteristic(service, &uuid,
                     BT_ATT_PERM_READ | BT_ATT_PERM_WRITE,
                     BT_GATT_CHRC_PROP_NOTIFY,
                     NULL, NULL, NULL);
-    if (i2c_read_data == NULL) {
+    if (clock_read_data == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Read service I2C_Read_data characteristic\n", name);
         fflush(stderr);
         goto fail;
     }
-    server->i2c_read_data_handle = gatt_db_attribute_get_handle(i2c_read_data);
+    server->clock_read_data_handle = gatt_db_attribute_get_handle(clock_read_data);
 
     bt_uuid16_create(&uuid, GATT_CLIENT_CHARAC_CFG_UUID);
     if (gatt_db_service_add_descriptor(service, &uuid,
                                        BT_ATT_PERM_READ | BT_ATT_PERM_WRITE,
-                                       i2c_read_data_ccc_read_cb,
-                                       i2c_read_data_ccc_write_cb, server) == NULL) {
+                                       clock_read_data_ccc_read_cb,
+                                       clock_read_data_ccc_write_cb, server) == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Read service characteristic config descriptor\n", name);
         fflush(stderr);
         goto fail;
@@ -364,10 +364,10 @@ fail:
     return -1;
 }
 
-static int populate_i2c_write_service(struct server *server)
+static int populate_clock_write_service(struct server *server)
 {
     bt_uuid_t uuid;
-    struct gatt_db_attribute *service, *i2c_write_data;
+    struct gatt_db_attribute *service, *clock_write_data;
 
     /* Add I2C_Read Service */
     bt_string_to_uuid(&uuid, UUID_I2C_WRITE);
@@ -379,16 +379,16 @@ static int populate_i2c_write_service(struct server *server)
     }
     /* I2c_Write_data Characteristic */
     bt_string_to_uuid(&uuid, UUID_I2C_WRITE_DATA);
-    i2c_write_data = gatt_db_service_add_characteristic(service, &uuid,
+    clock_write_data = gatt_db_service_add_characteristic(service, &uuid,
                      BT_ATT_PERM_WRITE,
                      BT_GATT_CHRC_PROP_WRITE_WITHOUT_RESP,
-                     NULL, i2c_write_data_write_cb, server);
-    if (i2c_write_data == NULL) {
+                     NULL, clock_write_data_write_cb, server);
+    if (clock_write_data == NULL) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to add I2C_Write service I2C_Write_data characteristic\n", name);
         fflush(stderr);
         goto fail;
     }
-    server->i2c_write_data_handle = gatt_db_attribute_get_handle(i2c_write_data);
+    server->clock_write_data_handle = gatt_db_attribute_get_handle(clock_write_data);
 
     gatt_db_service_set_active(service, true);
     return 0;
@@ -408,12 +408,12 @@ static int populate_db(struct server *server)
         fflush(stderr);
         return -1;
     }
-    if (populate_i2c_read_service(server) < 0) {
+    if (populate_clock_read_service(server) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to populate I2C_Read service\n", name);
         fflush(stderr);
         return -1;
     }
-    if (populate_i2c_write_service(server) < 0) {
+    if (populate_clock_write_service(server) < 0) {
         fprintf(stderr, LOG_ERR_STR "%s: Failed to populate I2C_Write service\n", name);
         fflush(stderr);
         return -1;
