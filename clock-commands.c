@@ -114,7 +114,7 @@ void clock_command(struct server *server, const uint8_t *cmd, uint8_t len)
 	delta = abs(delta);
         if (delta > 60)
             led_red();
-        else if (delta < 1.0/60.0)
+        else if (delta <= 0.02)
             led_green();
         else
             led_blue();
