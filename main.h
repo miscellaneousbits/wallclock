@@ -66,6 +66,7 @@ typedef struct {
 } user_data_t;
 
 #include "server.h"
+#include "monitor.h"
 #include "messages.h"
 #include "commands.h"
 
