@@ -15,3 +15,5 @@ void led_green(void);
 
 void led_blue(void);
 
+void led_blink(int on);
+
