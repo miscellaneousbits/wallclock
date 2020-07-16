@@ -1,6 +1,8 @@
 #pragma once
 
-#include "main.h"
+#include <stdint.h>
+
+#include "server.h"
 
 void clock_command(struct server* server, const uint8_t* cmd, uint8_t len);
 uint64_t getime(void);

@@ -1,4 +1,15 @@
-#include "main.h"
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include "led.h"
+#include "log.h"
+#include "messages.h"
+#include "monitor.h"
+#include "server.h"
 
 volatile time_t gLastPollTime;
 volatile uint16_t gPollInterval;
@@ -111,6 +122,7 @@ void clock_command(struct server* server, const uint8_t* cmd, uint8_t len)
             (uint32_t)(gLastPollTime - lastActivity), gTimeouts, gPollCount, delta, gVbat * 0.001,
             gMatch);
         fflush(stdout);
+        monitor_set_poll_interval(gPollInterval);
         delta = abs(delta);
         led_blink(0);
         if (delta > 60)

@@ -1,6 +1,34 @@
-#include "main.h"
+
+#include <errno.h>
+#include <pthread.h>
+#include <signal.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <bluetooth/bluetooth.h>
+#include <bluetooth/hci.h>
+#include <bluetooth/hci_lib.h>
+#include <bluetooth/l2cap.h>
+
+#include "lib/bluetooth.h"
+#include "lib/uuid.h"
+
 #include "src/shared/mgmt.h"
+#include "src/shared/att.h"
+#include "src/shared/queue.h"
+#include "src/shared/gatt-db.h"
+#include "src/shared/gatt-server.h"
+#include "src/shared/mainloop.h"
+#include "src/shared/mgmt.h"
+#include "src/shared/timeout.h"
+#include "src/shared/util.h"
+
 #include "src/advertising.h"
+
+#include "log.h"
+#include "commands.h"
+#include "server.h"
 
 static char* name = "BLE";
 
@@ -80,7 +108,7 @@ static void clock_read_data_ccc_read_cb(struct gatt_db_attribute* attrib, uint32
     gatt_db_attribute_read_result(attrib, id, 0, value, 2);
 }
 
-bool clock_read_data_cb(void* user_data)
+char clock_read_data_cb(void* user_data)
 {
     user_data_t* u_data = (user_data_t*)user_data;
     struct server* server = u_data->server;
@@ -696,14 +724,14 @@ fail:
     return rc;
 }
 
-static volatile bool bail = false;
+static volatile char bail = 0;
 static int dd;
 static int fd;
 
 static void term(int signum)
 {
     (void)signum;
-    bail = true;
+    bail = 1;
 }
 
 void* server_thread(void* ptr)

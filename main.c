@@ -1,6 +1,16 @@
-#include "main.h"
 
-#include <bcm2835.h>
+#include <pthread.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <systemd/sd-daemon.h>
+
+#include "commands.h"
+#include "led.h"
+#include "log.h"
+#include "monitor.h"
+#include "server.h"
 
 static pthread_t server_thread_handle;
 static pthread_t monitor_thread_handle;
@@ -54,6 +64,9 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
+    sigemptyset(&signal_mask);
+    sigaddset(&signal_mask, SIGINT);
+    sigaddset(&signal_mask, SIGTERM);
     rc = pthread_sigmask(SIG_UNBLOCK, &signal_mask, NULL);
     if (rc != 0)
     {
