@@ -1,4 +1,5 @@
 
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -90,7 +91,7 @@ void clock_command(struct server* server, const uint8_t* cmd, uint8_t len)
             lastActivity = time(NULL);
             break;
         }
-        fprintf(stderr, LOG_ERR_STR "Face time requested, but not set by cmd line\n");
+        printf(LOG_ERR_STR "Face time requested, but not set by cmd line\n");
         fflush(stderr);
         exit(EXIT_FAILURE);
         break;
@@ -123,14 +124,14 @@ void clock_command(struct server* server, const uint8_t* cmd, uint8_t len)
             gMatch);
         fflush(stdout);
         monitor_set_poll_interval(gPollInterval);
-        delta = abs(delta);
+        delta = fabs(delta);
         led_blink(0);
-        if (delta > 60)
+        if (delta > 10)
             leds(1, 0, 0);
-        else if (delta <= 0.02)
+        else if (delta <= 0.1)
             leds(0, 1, 0);
         else
-            leds(1, 0, 1);
+            leds(0, 0, 1);
         lastActivity = gLastPollTime;
         if (gFaceTime)
         {

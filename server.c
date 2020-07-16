@@ -521,6 +521,8 @@ static void server_destroy(struct server* server)
     gatt_db_unref(server->db);
 }
 
+static volatile char bail = 0;
+
 static int l2cap_le_att_listen_and_accept(void)
 {
     int sk, nsk = -1;
@@ -575,8 +577,11 @@ static int l2cap_le_att_listen_and_accept(void)
     int rc = select(sk + 1, &readset, NULL, NULL, &timeout);
     if (rc < 0)
     {
-        fprintf(stderr, LOG_ERR_STR "%s: Select failed\n", name);
-        fflush(stderr);
+        if (!bail)
+        {
+            fprintf(stderr, LOG_ERR_STR "%s: Select failed\n", name);
+            fflush(stderr);
+        }
         goto fail;
     }
     if (rc == 0)
@@ -724,7 +729,6 @@ fail:
     return rc;
 }
 
-static volatile char bail = 0;
 static int dd;
 static int fd;
 

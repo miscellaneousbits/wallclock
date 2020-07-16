@@ -31,6 +31,7 @@ static void clock_alarm(void)
     led_green(0);
     led_blue(0);
     led_blink(1);
+    printf(LOG_ERR_STR "Clock monitor: Lost contact\n");
 }
 
 void* monitor_thread(void* ptr)
