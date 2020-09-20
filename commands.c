@@ -6,10 +6,8 @@
 #include <string.h>
 #include <time.h>
 
-#include "led.h"
 #include "log.h"
 #include "messages.h"
-#include "monitor.h"
 #include "server.h"
 
 volatile time_t gLastPollTime;
@@ -57,13 +55,6 @@ int get_clock_face_time(char* ts, uint64_t* t)
     *t = ((uint64_t)mktime(&timeinfoLocal) << 8u) + (timeinfoLocal.tm_gmtoff << 8);
     ;
     return 0;
-}
-
-static void leds(int r, int g, int b)
-{
-    led_red(r);
-    led_green(g);
-    led_blue(b);
 }
 
 void clock_command(struct server* server, const uint8_t* cmd, uint8_t len)
@@ -123,15 +114,7 @@ void clock_command(struct server* server, const uint8_t* cmd, uint8_t len)
             (uint32_t)(gLastPollTime - lastActivity), gTimeouts, gPollCount, delta, gVbat * 0.001,
             gMatch);
         fflush(stdout);
-        monitor_set_poll_interval(gPollInterval);
         delta = fabs(delta);
-        led_blink(0);
-        if (delta > 10)
-            leds(1, 0, 0);
-        else if (delta <= 0.1)
-            leds(0, 1, 0);
-        else
-            leds(0, 0, 1);
         lastActivity = gLastPollTime;
         if (gFaceTime)
         {

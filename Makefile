@@ -5,7 +5,7 @@ BLUEZDIR = bluez-5.50
 
 INCLUDES = -I$(BLUEZDIR)
 
-LIBS = -lm -lbluetooth -lsystemd -lpthread -lbcm2835
+LIBS = -lm -lbluetooth -lsystemd -lpthread
 
 COPTFLAG = -O3
 #COPTFLAG = -g
