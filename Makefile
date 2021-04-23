@@ -7,7 +7,7 @@ INCLUDES = -I$(BLUEZDIR)
 
 LIBS = -lm -lbluetooth -lsystemd -lpthread
 
-COPTFLAG = -O3
+COPTFLAG = -O3 -flto
 #COPTFLAG = -g
 
 CFLAGS = $(COPTFLAG) -Werror -Wfatal-errors -Wall -ffunction-sections -fdata-sections $(INCLUDES)
@@ -44,4 +44,6 @@ clean:
 	@rm -rf $(OBJECTS) $(DEPS) *.map $(TARGET)
 
 install: $(TARGET)
+	sudo systemctl stop wallclock.service
 	sudo cp $(TARGET) $(INSTALLDIR)
+	sudo systemctl start wallclock.service
