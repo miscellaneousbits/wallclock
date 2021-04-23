@@ -35,6 +35,7 @@ all: $(TARGET) Makefile
 $(TARGET): $(OBJECTS) Makefile
 	@echo "$(OBJECTS) -> $(TARGET)"
 	$(ECHO)$(CC) $(LDFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS)
+	$(ECHO) strip $(TARGET)
 
 %.o: %.c Makefile
 	@echo "$< -> $@"
