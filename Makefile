@@ -14,7 +14,7 @@ CFLAGS = $(COPTFLAG) -Werror -Wfatal-errors -Wall -ffunction-sections -fdata-sec
 LDFLAGS = $(COPTFLAG) -Wl,--gc-sections,-Map=$(TARGET).map
 
 SOURCES = \
-	$(wildcard *.c) \
+	$(wildcard src/*.c) \
 	$(wildcard $(BLUEZDIR)/src/shared/*.c) \
 	uuid.c
 
